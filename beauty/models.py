@@ -14,6 +14,13 @@ class Procedure(models.Model):
         validators=[MinValueValidator(0)]
     )
 
+    def __str__(self):
+        return f'{self.name}. {self.price}'
+
+    class Meta:
+        verbose_name = 'Процедура'
+        verbose_name_plural = 'Процедуры'
+
 
 class Employee(models.Model):
 
@@ -30,6 +37,13 @@ class Employee(models.Model):
         on_delete=models.CASCADE,
         related_name='masters',
     )
+
+    def __str__(self):
+        return f'{self.name} {self.surname} - {self.procedures}'
+
+    class Meta:
+        verbose_name = 'Работник'
+        verbose_name_plural = 'Работники'
 
 
 class Salon (models.Model):
@@ -49,6 +63,13 @@ class Salon (models.Model):
         through_fields=('salons', 'employees'),
         related_name='salons'
     )
+
+    def __str__(self):
+        return f'{self.salon_name} {self.address} - {self.employees}'
+
+    class Meta:
+        verbose_name = 'Салон'
+        verbose_name_plural = 'Салоны'
 
 
 class Appointment(models.Model):
@@ -88,6 +109,13 @@ class Appointment(models.Model):
         blank=True
     )
 
+    def __str__(self):
+        return f'{self.day_of_week} {self.employees}'
+
+    class Meta:
+        verbose_name = 'Приём'
+        verbose_name_plural = 'Приёмы'
+
 
 class Order(models.Model):
     customer = models.ForeignKey(
@@ -108,4 +136,3 @@ class OrderItem(models.Model):
         on_delete=models.CASCADE,
         related_name='appointments'
     )
-
