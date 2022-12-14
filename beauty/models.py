@@ -91,8 +91,6 @@ class Salon (models.Model):
         verbose_name_plural = 'Салоны'
 
 
-
-
 class Appointment(models.Model):
 
     MONDAY = 'Mo'
@@ -156,4 +154,10 @@ class OrderItem(models.Model):
         Appointment,
         on_delete=models.CASCADE,
         related_name='appointments'
+    )
+
+
+class Feedback(models.Model):
+    feedback_text = models.TextField(
+        'Текст'
     )
