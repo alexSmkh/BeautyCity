@@ -46,6 +46,18 @@ class Employee(models.Model):
         verbose_name_plural = 'Работники'
 
 
+class Category(models.Model):
+    name = models.CharField(
+        'Категория',
+        max_length=20
+    )
+    procedures = models.ForeignKey(
+        Procedure,
+        on_delete=models.CASCADE,
+        related_name='category'
+    )
+
+
 class Salon (models.Model):
 
     salon_name = models.CharField(
@@ -63,6 +75,13 @@ class Salon (models.Model):
         through_fields=('salons', 'employees'),
         related_name='salons'
     )
+    procedure_categories = models.ForeignKey(
+        Category,
+        on_delete=models.CASCADE,
+        related_name='salons',
+        blank=True,
+        null=True
+    )
 
     def __str__(self):
         return f'{self.salon_name} {self.address}'
@@ -70,6 +89,8 @@ class Salon (models.Model):
     class Meta:
         verbose_name = 'Салон'
         verbose_name_plural = 'Салоны'
+
+
 
 
 class Appointment(models.Model):
