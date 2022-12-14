@@ -7,3 +7,7 @@ def index(request):
 
 def service(request):
     return render(request, 'beauty/service.html')
+
+
+def service_finally(request):
+    return render(request, 'beauty/serviceFinally.html')
