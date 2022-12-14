@@ -65,7 +65,7 @@ class Salon (models.Model):
     )
 
     def __str__(self):
-        return f'{self.salon_name} {self.address} - {self.employees}'
+        return f'{self.salon_name} {self.address}'
 
     class Meta:
         verbose_name = 'Салон'
