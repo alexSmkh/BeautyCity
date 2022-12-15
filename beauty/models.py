@@ -49,13 +49,20 @@ class Employee(models.Model):
 class Category(models.Model):
     name = models.CharField(
         'Категория',
-        max_length=20
+        max_length=25
     )
     procedures = models.ForeignKey(
         Procedure,
         on_delete=models.CASCADE,
         related_name='category'
     )
+
+    def __str__(self):
+        return f'{self.name} {self.procedures}'
+
+    class Meta:
+        verbose_name = 'Категория'
+        verbose_name_plural = 'Категории'
 
 
 class Salon (models.Model):
@@ -89,8 +96,6 @@ class Salon (models.Model):
     class Meta:
         verbose_name = 'Салон'
         verbose_name_plural = 'Салоны'
-
-
 
 
 class Appointment(models.Model):
@@ -145,6 +150,10 @@ class Order(models.Model):
         related_name='users'
     )
 
+    class Meta:
+        verbose_name = 'Заказчик'
+        verbose_name_plural = 'Заказчики'
+
 
 class OrderItem(models.Model):
     order = models.ForeignKey(
@@ -157,3 +166,7 @@ class OrderItem(models.Model):
         on_delete=models.CASCADE,
         related_name='appointments'
     )
+
+    class Meta:
+        verbose_name = 'Атрибуты заказа'
+        verbose_name_plural = 'Атрибуты '
