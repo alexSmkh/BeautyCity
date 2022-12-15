@@ -57,7 +57,7 @@ class Employee(models.Model):
 class Category(models.Model):
     name = models.CharField(
         'Категория',
-        max_length=20
+        max_length=25
     )
     procedures = models.ForeignKey(
         Procedure,
@@ -68,6 +68,13 @@ class Category(models.Model):
         'картинка',
         null=True
     )
+
+    def __str__(self):
+        return f'{self.name} {self.procedures}'
+
+    class Meta:
+        verbose_name = 'Категория'
+        verbose_name_plural = 'Категории'
 
 
 class Salon (models.Model):
@@ -159,6 +166,10 @@ class Order(models.Model):
         related_name='users'
     )
 
+    class Meta:
+        verbose_name = 'Заказчик'
+        verbose_name_plural = 'Заказчики'
+
 
 class OrderItem(models.Model):
     order = models.ForeignKey(
@@ -172,8 +183,7 @@ class OrderItem(models.Model):
         related_name='appointments'
     )
 
+    class Meta:
+        verbose_name = 'Атрибуты заказа'
+        verbose_name_plural = 'Атрибуты '
 
-class Feedback(models.Model):
-    feedback_text = models.TextField(
-        'Текст'
-    )
