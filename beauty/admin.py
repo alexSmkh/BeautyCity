@@ -1,6 +1,6 @@
 from django.contrib import admin
 from users.models import User, UserToCall
-from .models import Procedure, Employee, Salon, Appointment, Order, OrderItem, Category
+from .models import Procedure, Employee, Salon, Appointment, Order, OrderItem, Category, Feedback
 
 
 @admin.register(User)
@@ -45,4 +45,9 @@ class UserToCall(admin.ModelAdmin):
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(Feedback)
+class FeedbackAdmin(admin.ModelAdmin):
     pass
