@@ -13,6 +13,10 @@ class Procedure(models.Model):
         verbose_name='Цена',
         validators=[MinValueValidator(0)]
     )
+    image = models.ImageField(
+        'картинка',
+        null=True
+    )
 
     def __str__(self):
         return f'{self.name}. {self.price}'
@@ -37,6 +41,10 @@ class Employee(models.Model):
         on_delete=models.CASCADE,
         related_name='masters',
     )
+    avatar = models.ImageField(
+        'аватар',
+        null=True
+    )
 
     def __str__(self):
         return f'{self.name} {self.surname} - {self.procedures}'
@@ -55,6 +63,10 @@ class Category(models.Model):
         Procedure,
         on_delete=models.CASCADE,
         related_name='category'
+    )
+    image = models.ImageField(
+        'картинка',
+        null=True
     )
 
     def __str__(self):
@@ -87,6 +99,10 @@ class Salon (models.Model):
         on_delete=models.CASCADE,
         related_name='salons',
         blank=True,
+        null=True
+    )
+    image = models.ImageField(
+        'Картинка',
         null=True
     )
 

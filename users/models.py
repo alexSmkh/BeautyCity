@@ -3,11 +3,21 @@ from django.contrib.auth.models import AbstractUser
 from phonenumber_field.modelfields import PhoneNumberField
 
 
-class User(AbstractUser):
-
-    phonenumber = PhoneNumberField(
-        'Номер телефона',
+class Feedback(models.Model):
+    feedback_text = models.TextField(
+        'Текст'
     )
+
+
+class User(AbstractUser):
+    phonenumber = PhoneNumberField(
+        'Номер телефона'
+     )
+    feedbacks = models.ForeignKey(
+        Feedback,
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True
 
     class Meta:
         verbose_name = 'Пользователь'
@@ -41,7 +51,7 @@ class UserToCall(models.Model):
     )
 
     def __str__(self):
-        return f'{self.id} {self.name} {self.phonenumber}'
+        return f'{self.id} {self.name} {self.phonenumber} {self.get_status_display()}'
 
     class Meta:
         verbose_name = 'Консультация пользователя'
