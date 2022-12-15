@@ -41,7 +41,7 @@ class UserToCall(models.Model):
     )
 
     def __str__(self):
-        return f'{self.id} {self.name} {self.phonenumber}'
+        return f'{self.id} {self.name} {self.phonenumber} {self.get_status_display()}'
 
     class Meta:
         verbose_name = 'Консультация пользователя'
