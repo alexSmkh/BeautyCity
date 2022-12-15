@@ -377,6 +377,7 @@ $(document).ready(function() {
 	$('.header__block_auth').click(function(e) {
 		e.preventDefault()
 		$('#authModal').arcticmodal();
+
 		// $('#confirmModal').arcticmodal();
 
 	})
@@ -393,9 +394,151 @@ $(document).ready(function() {
 		e.preventDefault()
 		$('#tipsModal').arcticmodal();
 	})
-	
-	$('.authPopup__form').submit(function() {
-		$('#confirmModal').arcticmodal();
+
+	function getCookie(name) {
+    	let cookieValue = null;
+    	if (document.cookie && document.cookie !== '') {
+    	    const cookies = document.cookie.split(';');
+    	    for (let i = 0; i < cookies.length; i++) {
+    	        const cookie = cookies[i].trim();
+    	        // Does this cookie string begin with the name we want?
+    	        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+    	            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+    	            break;
+    	        }
+    	    }
+    	}
+    	return cookieValue;
+	}
+
+	$('.tipsPopup__form_inputNum').keyup(function(e) {
+		if (this.value.length !== this.maxLength) { return }
+
+		const next = $(this).data('next')
+		$(`input[name=num${next}]`).focus()
+	})
+
+	function post_request(url, data, success_handler, fail_handler) {
+		$.ajax({
+			type: 'POST',
+			url: url,
+			headers: { 'X-CSRFToken': getCookie('csrftoken') },
+			data,
+			dataType: 'json',
+			success: success_handler,
+			error: fail_handler
+		})
+
+	}
+
+	function clearConfirmationForm() {
+		$('.tipsPopup__form_inputNum').each(function(_, inputEl) {
+			$(inputEl).val('');
+		});
+	}
+
+	function clearFormErrors(form) {
+		form.find('.field_errors').each(function(_, errorDiv) {
+			$(errorDiv).text('')
+		})
+	}
+
+	$('.authPopup__form').submit(function(e) {
+		e.preventDefault();
+
+		const form = $(this);
+		const phonenumber = form.find('input[name=tel]').val();
+		const confirm_rules = form.find('input[name=confirm_rules]').is(':checked');
+		const url = form.attr('action')
+
+		localStorage.setItem('phonenumber', phonenumber);
+
+		const payload = JSON.stringify({ phonenumber, confirm_rules });
+
+		const success_handler = () => {
+			clearFormErrors(form)
+			$('#authModal').arcticmodal('close');
+			$('#confirmModal').arcticmodal();
+		}
+
+		const error_handler = (data) => {
+			const response = data.responseJSON
+			console.log('response', response)
+			Object.entries(response).forEach(([field, errors]) => {
+				const error_list = errors.map((error) => `<li>${error}</li>`).join('');
+				const error_block = `<ul>${error_list}</ul>`;
+				console.log('error on', error_block);
+
+				$(`#${field}__error`).html(error_block);
+				$('#confirm_rules__error').html(error_block);
+			})
+		}
+
+		post_request(url, payload, success_handler, error_handler)
+
+		return false
+	})
+
+	$('.confirmPopup__changeNumber').click(function(e) {
+		e.preventDefault();
+
+		clearConfirmationForm();
+		clearFormErrors($('.confirmPopup__form'))
+		$('#confirmModal').arcticmodal('close');
+		$('#authModal').arcticmodal()
+	})
+
+	$('#request_code_again').click(function(e) {
+		e.preventDefault();
+
+		const url = $('.confirmPopup__form').attr('action')
+		const data = {
+			phonenumber: localStorage.getItem('phonenumber'),
+			confirm_rules: true,
+		}
+
+		const success_handler = () => {
+			clearConfirmationForm();
+			$('.code_sent_notify').show().delay(1000).fadeOut();
+		}
+
+		const error_handler = (data) => {
+			const response = data.responseJSON
+			Object.entries(response).forEach(([field, errors]) => {
+				const error_list = errors.map((error) => `<li>${error}</li>`).join('');
+				const error_block = `<ul>${error_list}</ul>`;
+				console.log('error on', error_block);
+
+				$(`#confirm_registration__error`).html(error_block);
+			})
+		};
+
+		post_request(url, data, success_handler, error_handler);
+	})
+
+	$('.confirmPopup__form').submit(function(e) {
+		e.preventDefault();
+
+		const form = $(this)
+		const url =form.attr('action')
+		const digits = []
+		form.find('.tipsPopup__form_inputNum').each(function() {
+			digits.push($(this).val())
+		})
+		const code = parseInt(digits.join(''))
+		const data = JSON.stringify({ phonenumber: localStorage.getItem('phonenumber'), code })
+
+		const success_handler = () => $('#confirmModal').arcticmodal('close');
+		const error_handler = (data) => {
+			const response = data.responseJSON
+			Object.entries(response).forEach(([field, errors]) => {
+				const error_list = errors.map((error) => `<li>${error}</li>`).join('');
+				const error_block = `<ul>${error_list}</ul>`;
+				$('#confirm_rules__error').html(error_block);
+			})
+		}
+
+		post_request(url, data, success_handler, error_handler);
 		return false
 	})
 

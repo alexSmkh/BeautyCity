@@ -543,7 +543,7 @@ padding: 11px 14px;
     margin-bottom: 15px;
 }
 .contacts__form_checkboxBlock {
-	margin-bottom: 16px;
+	/*margin-bottom: 16px;*/
 }
 .contacts__form_checkboxBlock__intro {
 	font-weight: 300;
@@ -1875,7 +1875,7 @@ border: none;
 
 color: #FFFFFF;
 }
-.authPopup__btn {
+.authPopup__btn, .confirmPopup__btn {
 width: 306px;
 height: 53px;
 }
@@ -1892,13 +1892,19 @@ height: 53px;
 	font-weight: 400;
 	font-size: 16px;
 	line-height: 127.52%;
+	margin-top: 20px;
 	/* or 20px */
 
 
 	/* черный */
-margin-bottom: 10px;
+	margin-bottom: 10px;
 	color: #323232;
 }
+.code_sent_notify {
+	display: none;
+	color: #1CD44C;
+}
+
 .popup__link {
 font-weight: 500;
 font-size: 12px;
@@ -1909,6 +1915,13 @@ color: #F6A912;
 .confirmPopup__sms, .confirmPopup__changeNumber {
 text-align: left;
 }
+
+.confirmPopup__changeNumber {
+	display: flex;
+	justify-content: space-between;
+	height: 20px;
+}
+
 .confirmPopup {
 	padding-left: 51px;
 }
@@ -2025,9 +2038,21 @@ margin-right: 10px;
     right: 11px;
     top: 9px;
 }
+.box-modal {
+	padding: 50px;
+}
 
 .notes__footer .notes__main_pay {
 	display: none;
+}
+
+.field_errors {
+	color: red;
+	margin-bottom: 10px;
+	padding: 0 5px;
+}
+.field_errors ul {
+	list-style: none;
 }
 
 @media (max-width: 1199.98px) {
