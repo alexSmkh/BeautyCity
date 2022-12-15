@@ -27,3 +27,7 @@ def service(request):
 
 def service_finally(request):
     return render(request, 'beauty/serviceFinally.html')
+
+
+def notes(request):
+    return render(request, 'beauty/notes.html')
