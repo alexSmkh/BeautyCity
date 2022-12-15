@@ -1,6 +1,20 @@
 from django.db import models
-from django.core.validators import MinValueValidator
+from django.core.validators import MinValueValidator, MaxValueValidator
 from users.models import User
+
+
+class Category(models.Model):
+    name = models.CharField(
+        'Категория',
+        max_length=25
+    )
+
+    def __str__(self):
+        return f'{self.name}'
+
+    class Meta:
+        verbose_name = 'Категория'
+        verbose_name_plural = 'Категории'
 
 
 class Procedure(models.Model):
@@ -13,9 +27,17 @@ class Procedure(models.Model):
         verbose_name='Цена',
         validators=[MinValueValidator(0)]
     )
-    image = models.ImageField(
+    image = models.FileField(
         'картинка',
-        null=True
+        null=True,
+        upload_to='media/'
+    )
+    category = models.ForeignKey(
+        Category,
+        on_delete=models.CASCADE,
+        related_name='procedure',
+        default=None,
+        verbose_name='Категории'
     )
 
     def __str__(self):
@@ -36,45 +58,54 @@ class Employee(models.Model):
         'Фамилия',
         max_length=80
     )
-    procedures = models.ForeignKey(
-        Procedure,
-        on_delete=models.CASCADE,
-        related_name='masters',
-    )
-    avatar = models.ImageField(
+    avatar = models.FileField(
         'аватар',
-        null=True
+        null=True,
+        upload_to='media/'
+    )
+    category = models.ForeignKey(
+        Category,
+        on_delete=models.CASCADE,
+        default=None,
+        verbose_name='Специальность'
     )
 
     def __str__(self):
-        return f'{self.name} {self.surname} - {self.procedures}'
+        return f'{self.name} {self.surname}'
 
     class Meta:
         verbose_name = 'Работник'
         verbose_name_plural = 'Работники'
 
 
-class Category(models.Model):
-    name = models.CharField(
-        'Категория',
-        max_length=25
+class Feedback(models.Model):
+
+    feedback_text = models.TextField(
+        'Текст'
     )
-    procedures = models.ForeignKey(
-        Procedure,
+    user = models.ForeignKey(
+        User,
         on_delete=models.CASCADE,
-        related_name='category'
+        related_name='user_reviews'
     )
-    image = models.ImageField(
-        'картинка',
-        null=True
+    value = models.IntegerField(
+        'Оценка',
+        validators=[MinValueValidator(0), MaxValueValidator(5)]
+    )
+    employee = models.ForeignKey(
+        Employee,
+        on_delete=models.CASCADE,
+        related_name='feedbacks',
+        verbose_name='Мастер',
+        default=None
     )
 
     def __str__(self):
-        return f'{self.name} {self.procedures}'
+        return f' Оценка - {self.value}'
 
     class Meta:
-        verbose_name = 'Категория'
-        verbose_name_plural = 'Категории'
+        verbose_name = 'Отзыв'
+        verbose_name_plural = 'Отзывы'
 
 
 class Salon (models.Model):
@@ -94,9 +125,10 @@ class Salon (models.Model):
         through_fields=('salons', 'employees'),
         related_name='salons'
     )
-    image = models.ImageField(
+    image = models.FileField(
         'Картинка',
-        null=True
+        null=True,
+        upload_to='media/'
     )
 
     def __str__(self):
