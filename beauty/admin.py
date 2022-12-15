@@ -44,5 +44,5 @@ class UserToCall(admin.ModelAdmin):
 
 
 @admin.register(Category)
-class CategoryAdmib(admin.ModelAdmin):
+class CategoryAdmin(admin.ModelAdmin):
     pass
