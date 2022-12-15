@@ -94,13 +94,6 @@ class Salon (models.Model):
         through_fields=('salons', 'employees'),
         related_name='salons'
     )
-    procedure_categories = models.ForeignKey(
-        Category,
-        on_delete=models.CASCADE,
-        related_name='salons',
-        blank=True,
-        null=True
-    )
     image = models.ImageField(
         'Картинка',
         null=True
@@ -124,6 +117,19 @@ class Appointment(models.Model):
     SATURDAY = 'Sa'
     SUNDAY = 'Su'
 
+    MORNING_1 = '9:00 - 10:00'
+    MORNING_2 = '10:00 - 11:00'
+    MORNING_3 = '11:00 - 12:00'
+    AFTERNOON_1 = '12:00 - 13:00'
+    AFTERNOON_2 = '13:00 - 14:00'
+    AFTERNOON_3 = '14:00 - 15:00'
+    DAY_1 = '15:00 - 16:00'
+    DAY_2 = '16:00 - 17:00'
+    DAY_3 = '17:00 - 18:00'
+    EVENING_1 = '18:00 - 19:00'
+    EVENING_2 = '19:00 - 20:00'
+    EVENING_3 = '20:00 - 21:00'
+
     DAYS_OF_WEEK = [
         (MONDAY, 'Пн'),
         (TUESDAY, 'Вт'),
@@ -132,6 +138,21 @@ class Appointment(models.Model):
         (FRIDAY, 'Пт'),
         (SATURDAY, 'Сб'),
         (SUNDAY, 'Вс')
+    ]
+
+    WORK_HOURS = [
+        (MORNING_1, '9:00'),
+        (MORNING_2, '10:00'),
+        (MORNING_3, '11:00'),
+        (AFTERNOON_1, '12:00'),
+        (AFTERNOON_2, '13:00'),
+        (AFTERNOON_3, '14:00'),
+        (DAY_1, '15:00'),
+        (DAY_2, '16:00'),
+        (DAY_3, '17:00'),
+        (EVENING_1, '18:00'),
+        (EVENING_2, '19:00'),
+        (EVENING_3, '20:00'),
     ]
 
     employees = models.ForeignKey(
@@ -148,6 +169,12 @@ class Appointment(models.Model):
         max_length=20,
         verbose_name='Рабочие дни',
         choices=DAYS_OF_WEEK,
+        blank=True
+    )
+    appointment_hour = models.CharField(
+        max_length=15,
+        verbose_name='Время записи',
+        choices=WORK_HOURS,
         blank=True
     )
 

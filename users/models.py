@@ -11,13 +11,15 @@ class Feedback(models.Model):
 
 class User(AbstractUser):
     phonenumber = PhoneNumberField(
-        'Номер телефона'
-     )
+        'Номер телефона',
+        db_index=True
+    )
     feedbacks = models.ForeignKey(
         Feedback,
         on_delete=models.CASCADE,
         blank=True,
         null=True
+    )
 
     class Meta:
         verbose_name = 'Пользователь'
