@@ -463,14 +463,10 @@ $(document).ready(function() {
 
 		const error_handler = (data) => {
 			const response = data.responseJSON
-			console.log('response', response)
 			Object.entries(response).forEach(([field, errors]) => {
 				const error_list = errors.map((error) => `<li>${error}</li>`).join('');
 				const error_block = `<ul>${error_list}</ul>`;
-				console.log('error on', error_block);
-
 				$(`#${field}__error`).html(error_block);
-				$('#confirm_rules__error').html(error_block);
 			})
 		}
 
@@ -491,24 +487,25 @@ $(document).ready(function() {
 	$('#request_code_again').click(function(e) {
 		e.preventDefault();
 
-		const url = $('.confirmPopup__form').attr('action')
-		const data = {
+		const confirmForm = $('.confirmPopup__form')
+		const url = $('.authPopup__form').attr('action')
+		const data = JSON.stringify({
 			phonenumber: localStorage.getItem('phonenumber'),
 			confirm_rules: true,
-		}
+		});
 
 		const success_handler = () => {
 			clearConfirmationForm();
+			clearFormErrors(confirmForm)
 			$('.code_sent_notify').show().delay(1000).fadeOut();
 		}
 
 		const error_handler = (data) => {
+			clearFormErrors(confirmForm)
 			const response = data.responseJSON
 			Object.entries(response).forEach(([field, errors]) => {
 				const error_list = errors.map((error) => `<li>${error}</li>`).join('');
 				const error_block = `<ul>${error_list}</ul>`;
-				console.log('error on', error_block);
-
 				$(`#confirm_registration__error`).html(error_block);
 			})
 		};
@@ -528,13 +525,16 @@ $(document).ready(function() {
 		const code = parseInt(digits.join(''))
 		const data = JSON.stringify({ phonenumber: localStorage.getItem('phonenumber'), code })
 
-		const success_handler = () => $('#confirmModal').arcticmodal('close');
+		const success_handler = () => {
+			$('#confirmModal').arcticmodal('close');
+			window.location.replace(window.location.href);
+		}
 		const error_handler = (data) => {
 			const response = data.responseJSON
 			Object.entries(response).forEach(([field, errors]) => {
 				const error_list = errors.map((error) => `<li>${error}</li>`).join('');
 				const error_block = `<ul>${error_list}</ul>`;
-				$('#confirm_rules__error').html(error_block);
+				$('#confirm_registration__error').html(error_block);
 			})
 		}
 

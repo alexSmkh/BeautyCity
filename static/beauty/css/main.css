@@ -2198,13 +2198,12 @@ margin-right: 10px;
 	}
 	.notes__pay_title {
 		font-weight: 500;
-font-size: 24px;
-line-height: 127.52%;
-/* identical to box height, or 31px */
+		font-size: 24px;
+		line-height: 127.52%;
+		/* identical to box height, or 31px */
 
-margin-bottom: 4px
-color: #262626;
-
+		margin-bottom: 4px;
+		color: #262626;
 	}
 	.notes__pay_block {
 		max-width: 40%;
