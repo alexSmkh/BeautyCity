@@ -18,6 +18,7 @@ class User(AbstractUser):
         on_delete=models.CASCADE,
         blank=True,
         null=True
+    )
 
     class Meta:
         verbose_name = 'Пользователь'
