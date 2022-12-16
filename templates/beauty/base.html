@@ -6,7 +6,8 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+    <link rel="icon" type="image/png" href="{% static 'beauty/img/favicon.png' %}">
+    {% csrf_token %}
 	{% block title %}
     {% endblock %}
 	<link rel="preconnect" href="https://fonts.googleapis.com">
@@ -81,12 +82,18 @@
 					</div>
 					<div class="col-2 col-md-2 col-lg-3">
 						<div class="header__block">
-						<a href="tel:+79179023800"><button class="header__block_btn">Перезвоните мне</button></a>
-						<div class="header__block_auth">
-							<img src="{% static 'beauty/img/acc.svg' %}" alt="account" class="header__account_img">
-							<span class="header__block_auth__intro">Войти</span>
-						</div>
-					</div>
+                            {% if user.is_authenticated %}
+                                <div class="header__block_user">
+                                    <a href="tel:{{ user.phonenumber }}"><button class="header__block_btn">Перезвоните мне</button></a>
+                                    <a class="header__block_user__intro" href="/users/logout">Выйти</a>
+                                </div>
+                            {% else %}
+                                <div class="header__block_auth">
+                                    <img src="{% static 'beauty/img/acc.svg' %}" alt="account" class="header__account_img">
+                                    <span class="header__block_auth__intro">Войти</span>
+						        </div>
+                            {% endif %}
+                        </div>
 					</div>
 				</div>
 				
