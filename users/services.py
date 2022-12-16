@@ -44,4 +44,4 @@ class VerificationCodeBuilder:
 
     @classmethod
     def is_code_expired(cls, key):
-        return bool(cache.get(key))
+        return not cache.get(key)
