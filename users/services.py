@@ -1,3 +1,7 @@
+import random
+
+from django.core.cache import cache
+
 import requests
 from environs import Env
 
@@ -24,3 +28,20 @@ class TelegramMessageSender:
             response.raise_for_status()
         except Exception as e:
             return None
+
+
+class VerificationCodeBuilder:
+    @classmethod
+    def create_verification_code(cls, key, expiration_time=300):
+        code = random.randint(1000, 9999)
+        cache.set(key, code, expiration_time)
+        return code
+
+    @classmethod
+    def is_code_valid(cls, key, code):
+        valid_code = cache.get(key)
+        return valid_code == code
+
+    @classmethod
+    def is_code_expired(cls, key):
+        return bool(cache.get(key))
