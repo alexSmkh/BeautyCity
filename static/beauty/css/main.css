@@ -121,7 +121,7 @@ margin-right: 22px;
 border:  none;
 color: #F6A912;
 }
-.header__block_auth {
+.header__block_auth, .header__block_user {
 cursor: pointer;
 display: flex;
 align-items: center;
@@ -129,19 +129,23 @@ align-items: center;
 .header__account_img {
 	margin-right: 5px;
 	width: 30px;
-height: 30px;
+	height: 30px;
 }
-.header__block_auth__intro {
+.header__block_auth__intro, .header__block_user__intro {
 	font-weight: 500;
-font-size: 12px;
-line-height: 127.52%;
-/* or 15px */
+	line-height: 127.52%;
+	font-size: 12px;
+	/* or 15px */
 
 
 /* черный */
 
 color: #323232;
 
+}
+
+a.header__block_auth__intro {
+	text-decoration: none;
 }
 
 /*banner*/
