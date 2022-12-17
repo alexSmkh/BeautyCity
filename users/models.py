@@ -6,6 +6,7 @@ from .managers import CustomUserManager
 
 
 class User(AbstractUser):
+    username = None
     phonenumber = PhoneNumberField(
         'Номер телефона',
         unique=True,
@@ -13,11 +14,12 @@ class User(AbstractUser):
     )
 
     USERNAME_FIELD = 'phonenumber'
+    REQUIRED_FIELDS = []
 
     objects = CustomUserManager()
 
     def __str__(self):
-        return self.phonenumber
+        return str(self.phonenumber)
 
     class Meta:
         verbose_name = 'Пользователь'

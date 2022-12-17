@@ -1,7 +1,23 @@
 from django import forms
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 
 from phonenumber_field.formfields import PhoneNumberField
-from .models import UserToCall
+
+from .models import UserToCall, User
+
+
+class CustomUserCreationForm(UserCreationForm):
+
+    class Meta:
+        model = User
+        fields = ('phonenumber',)
+
+
+class CustomUserChangeForm(UserChangeForm):
+
+    class Meta:
+        model = User
+        fields = ('phonenumber',)
 
 
 class UserToCallForm(forms.ModelForm):
