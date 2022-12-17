@@ -48,6 +48,31 @@ class Procedure(models.Model):
         verbose_name_plural = 'Процедуры'
 
 
+class Salon (models.Model):
+
+    salon_name = models.CharField(
+        'Название',
+        max_length=50
+    )
+    address = models.CharField(
+        'Адрес',
+        max_length=100,
+        blank=True
+    )
+    image = models.FileField(
+        'Картинка',
+        null=True,
+        upload_to='media/'
+    )
+
+    def __str__(self):
+        return f'{self.salon_name} {self.address}'
+
+    class Meta:
+        verbose_name = 'Салон'
+        verbose_name_plural = 'Салоны'
+
+
 class Employee(models.Model):
 
     name = models.CharField(
@@ -68,6 +93,12 @@ class Employee(models.Model):
         on_delete=models.CASCADE,
         default=None,
         verbose_name='Специальность'
+    )
+    salon = models.ForeignKey(
+        Salon,
+        on_delete=models.CASCADE,
+        related_name='masters',
+        verbose_name='Салон',
     )
 
     def __str__(self):
@@ -106,37 +137,6 @@ class Feedback(models.Model):
     class Meta:
         verbose_name = 'Отзыв'
         verbose_name_plural = 'Отзывы'
-
-
-class Salon (models.Model):
-
-    salon_name = models.CharField(
-        'Название',
-        max_length=50
-    )
-    address = models.CharField(
-        'Адрес',
-        max_length=100,
-        blank=True
-    )
-    employees = models.ManyToManyField(
-        Employee,
-        through='Appointment',
-        through_fields=('salons', 'employees'),
-        related_name='salons'
-    )
-    image = models.FileField(
-        'Картинка',
-        null=True,
-        upload_to='media/'
-    )
-
-    def __str__(self):
-        return f'{self.salon_name} {self.address}'
-
-    class Meta:
-        verbose_name = 'Салон'
-        verbose_name_plural = 'Салоны'
 
 
 class Appointment(models.Model):
