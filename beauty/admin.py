@@ -1,6 +1,6 @@
 from django.contrib import admin
 from users.models import User, UserToCall
-from .models import Procedure, Employee, Salon, Appointment, Order, OrderItem, Category, Feedback
+from .models import Procedure, Employee, Salon, Appointment, Category, Feedback
 
 
 @admin.register(User)
@@ -25,16 +25,6 @@ class SalonAdmin(admin.ModelAdmin):
 
 @admin.register(Appointment)
 class AppointmentAdmin(admin.ModelAdmin):
-    pass
-
-
-@admin.register(Order)
-class OrderAdmin(admin.ModelAdmin):
-    pass
-
-
-@admin.register(OrderItem)
-class OrderItemAdmin(admin.ModelAdmin):
     pass
 
 
