@@ -12,14 +12,14 @@ class UserAdmin(admin.ModelAdmin):
 class ProcedureAdmin(admin.ModelAdmin):
     pass
 
-
 @admin.register(Employee)
 class EmployeeAdmin(admin.ModelAdmin):
+    # inlines = (SalonInlineAdmin,)
     pass
-
 
 @admin.register(Salon)
 class SalonAdmin(admin.ModelAdmin):
+    # inlines = (EmployeeInlineAdmin, )
     pass
 
 

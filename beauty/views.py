@@ -1,7 +1,18 @@
+from http import HTTPStatus
 from django.shortcuts import render, redirect
+from django.http import JsonResponse
+from django.core.serializers import serialize
+
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+
+from .models import Category, Salon, Procedure, Employee, Feedback
 from .models import Salon, Procedure, Employee, Feedback, Category
 from users.models import User
 from users.forms import UserToCallForm
+from .serializers import EmployeeAppointmentDetailSerializer, RequestMastersForAppointmentDetailSerializer, \
+    SalonAppointmentDetailSerializer, \
+    ServiceCategoryAppointmentDetailSerializer
 from .forms import AppointmentForm
 
 
@@ -26,6 +37,7 @@ def index(request):
     else:
         form = UserToCallForm()
     context['form'] = form
+    
 
     return render(request, 'beauty/index.html', context)
 
@@ -48,8 +60,27 @@ def service(request):
         service_items.append(service_item)
 
     context['service_items'] = service_items
+    return render(request, 'beauty/service.html', context=context)
 
-    return render(request, 'beauty/service.html', context)
+
+@api_view(['GET'])
+def get_categories(request):
+    categories = Category.objects.all()
+    serializer = ServiceCategoryAppointmentDetailSerializer(categories, many=True)
+    return Response(serializer.data)
+
+
+@api_view(['GET'])
+def get_masters(request):
+    request_serializer = RequestMastersForAppointmentDetailSerializer(request.query_params)
+    masters = Employee.objects.filter(
+        salon_id=request_serializer.data['salon_id'],
+        category_id=request_serializer.data['category_id'],
+    )
+
+    serializer = EmployeeAppointmentDetailSerializer(masters, many=True)
+
+    return Response(data=serializer.data)
 
 
 def service_finally(request):

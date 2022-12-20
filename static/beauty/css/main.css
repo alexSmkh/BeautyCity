@@ -49,6 +49,21 @@ margin-bottom: 20px;
 
 color: #323232;
 }
+/*#time, #datepicker__container, #timepicker__container {*/
+/*	display: none;*/
+/*}*/
+#confirm {
+	display: none;
+}
+
+#confirm, #datepicker__container, #timepicker__container {
+	transition: 0.5s;
+}
+
+#timepicker__container {
+	display: none;
+}
+
 .block__title {
 
 }
@@ -983,10 +998,12 @@ margin-bottom: 15px;
 .accordion__block {
 	padding: 19px 30px 22px 30px;
 	background: #F8F9FA;
-border-top: 1px solid rgba(0, 0, 0, 0.1);
-/* тень */
-cursor: pointer;
-box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.02);
+	border-top: 1px solid rgba(0, 0, 0, 0.1);
+	/* тень */
+	cursor: pointer;
+	box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.02);
+	transition: 0.4s;
+	border-radius: 10px;
 }
 .accordion__block_intro {
 	min-width: 227px;
@@ -1047,9 +1064,11 @@ opacity: 0.3;
 }
 
 
-.accordion:hover {
+.accordion:hover, .accordion__block:hover, .accordion__block_item:hover {
   background-color: #ccc;
 }
+
+
 
 .accordion:after {
   content: '';
@@ -1077,6 +1096,10 @@ opacity: 0.3;
   !max-height: 0;
   !overflow: hidden;
   !transition: max-height 0.2s ease-out;
+}
+
+button.selected {
+	background-color: #FFF9E4;
 }
 
 .panel.active {
@@ -1156,8 +1179,10 @@ height: 53px;
 .accordion__block_item {
 	padding: 23px;
 	cursor: pointer;
-	padding-left: 104px;
+	margin-left: 104px;
 	border-bottom: 1px solid rgba(0, 0, 0, .1);
+	border-radius: 10px;
+	transition: 0.4s;
 }
 .accordion__block_item:last-child {
 	border-bottom: none;
