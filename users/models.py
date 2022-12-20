@@ -12,9 +12,12 @@ class User(AbstractUser):
         unique=True,
         db_index=True,
     )
-
+    avatar = models.FileField(
+        'Аватарка',
+        blank=True,
+    )
     USERNAME_FIELD = 'phonenumber'
-    REQUIRED_FIELDS = []
+    REQUIRED_FIELDS = ['first_name', 'last_name']
 
     objects = CustomUserManager()
 
