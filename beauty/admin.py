@@ -12,14 +12,19 @@ class UserAdmin(admin.ModelAdmin):
 class ProcedureAdmin(admin.ModelAdmin):
     pass
 
+
+class WorkDayInline(admin.TabularInline):
+    model = DayOfWork
+    extra = 1
+
+
 @admin.register(Employee)
 class EmployeeAdmin(admin.ModelAdmin):
-    # inlines = (SalonInlineAdmin,)
-    pass
+    inlines = [WorkDayInline]
+
 
 @admin.register(Salon)
 class SalonAdmin(admin.ModelAdmin):
-    # inlines = (EmployeeInlineAdmin, )
     pass
 
 
