@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from .models import Salon, Procedure, Employee, Feedback, Category
+from users.models import User
 from users.forms import UserToCallForm
 
 
@@ -8,12 +9,12 @@ def index(request):
     procedures = Procedure.objects.all()
     employees = Employee.objects.all()
     feedbacks = Feedback.objects.all()
-
     context = {
         'salons': salons,
         'procedures': procedures,
         'employees': employees,
-        'feedbacks': feedbacks
+        'feedbacks': feedbacks,
+        'is_authenticated': request.user.is_authenticated
     }
 
     if request.method == 'POST':
@@ -35,6 +36,7 @@ def service(request):
 
     context = {
         'salons': salons,
+        'is_authenticated': request.user.is_authenticated
     }
 
     for category in categories:
@@ -54,4 +56,12 @@ def service_finally(request):
 
 
 def notes(request):
-    return render(request, 'beauty/notes.html')
+    user=request.user
+    if user.is_authenticated:
+        user = User.objects.get(phonenumber = str(user.phonenumber))
+        user_attrs = {
+            'first_name': user.first_name,
+            'last_name': user.last_name,
+            'avatar': user.avatar
+        }
+    return render(request, 'beauty/notes.html', context = user_attrs)
