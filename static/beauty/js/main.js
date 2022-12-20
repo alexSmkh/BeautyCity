@@ -323,6 +323,29 @@ $(document).ready(function() {
 		// $(this).parent().parent().find('.panel').addClass('selected')
 	})
 
+	const getCategoriesAndServices = (serviceName) => {
+		const url = '/categories_and_services';
+
+		const success_handler = (data) => {
+			response = data.responseJSON
+			render_services(response)
+
+		}
+
+
+		post_request(url, )
+	}
+
+
+
+	$('.accordion__salon_block').on('click', function(e) {
+		const salon = $(this)
+		const salonName = salon.find('.accordion__block_intro').text()
+		console.log(salonName)
+
+
+	})
+
 
 	$('.accordion__block_item').click(function(e) {
 		let thisName,thisAddress;
