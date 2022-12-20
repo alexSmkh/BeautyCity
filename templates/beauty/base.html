@@ -44,6 +44,7 @@
 									<li class="mobMenu__menu_item"><a href="#" class="mobMenu__menu_link">Услуги</a></li>
 									<li class="mobMenu__menu_item"><a href="#" class="mobMenu__menu_link">Отзывы</a></li>
 									<li class="mobMenu__menu_item"><a href="#" class="mobMenu__menu_link">Контакты</a></li>
+                                    <li class="mobMenu__menu_item"><a href="#" class="mobMenu__menu_link">Контакты</a></li>
 								</ul>
 							</nav>
 							<a href="#" class="mobMenu__account">Личный кабинет</a>
@@ -77,6 +78,9 @@
 							<li class="menu__item"><a href="#services" class="menu__item_link">Услуги</a></li>
 							<li class="menu__item"><a href="#reviews" class="menu__item_link">Отзывы</a></li>
 							<li class="menu__item"><a href="#footer" class="menu__item_link">Контакты</a></li>
+                            {% if is_authenticated %}
+                            <li class="menu__item"><a href="{% url 'beauty:notes'%}" class="mobMenu__account">Личный кабинет</a></li>
+                            {% endif %}
 						</ul>
 					</nav>
 					</div>
