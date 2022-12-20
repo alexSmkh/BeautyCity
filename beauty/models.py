@@ -48,32 +48,6 @@ class Procedure(models.Model):
         verbose_name_plural = 'Процедуры'
 
 
-class Salon (models.Model):
-
-    salon_name = models.CharField(
-        'Название',
-        max_length=50
-    )
-    address = models.CharField(
-        'Адрес',
-        max_length=100,
-        blank=True
-    )
-    image = models.FileField(
-        'Картинка',
-        null=True,
-        upload_to='media/',
-        blank=True
-    )
-
-    def __str__(self):
-        return f'{self.salon_name} {self.address}'
-
-    class Meta:
-        verbose_name = 'Салон'
-        verbose_name_plural = 'Салоны'
-
-
 class Employee(models.Model):
 
     name = models.CharField(
@@ -96,13 +70,6 @@ class Employee(models.Model):
         default=None,
         verbose_name='Специальность'
     )
-    salon = models.ForeignKey(
-        Salon,
-        on_delete=models.CASCADE,
-        related_name='masters',
-        verbose_name='Салон',
-        default=None
-    )
 
     def __str__(self):
         return f'{self.name} {self.surname}'
@@ -110,6 +77,37 @@ class Employee(models.Model):
     class Meta:
         verbose_name = 'Работник'
         verbose_name_plural = 'Работники'
+
+
+class Salon (models.Model):
+
+    name = models.CharField(
+        'Название',
+        max_length=50
+    )
+    address = models.CharField(
+        'Адрес',
+        max_length=100,
+        blank=True
+    )
+    image = models.FileField(
+        'Картинка',
+        null=True,
+        upload_to='media/',
+        blank=True
+    )
+    employee = models.ManyToManyField(
+        'Employee',
+        through='DayOfWork',
+        through_fields=('salons', 'employees')
+    )
+
+    def __str__(self):
+        return f'{self.salon_name} {self.address}'
+
+    class Meta:
+        verbose_name = 'Салон'
+        verbose_name_plural = 'Салоны'
 
 
 class Feedback(models.Model):
@@ -141,8 +139,7 @@ class Feedback(models.Model):
         verbose_name_plural = 'Отзывы'
 
 
-class Appointment(models.Model):
-
+class DayOfWork(models.Model):
     MONDAY = 'Mo'
     TUESDAY = 'Tu'
     WEDNESDAY = 'We'
@@ -150,6 +147,44 @@ class Appointment(models.Model):
     FRIDAY = 'Fr'
     SATURDAY = 'Sa'
     SUNDAY = 'Su'
+
+    DAYS_OF_WEEK = [
+        (MONDAY, 'Пн'),
+        (TUESDAY, 'Вт'),
+        (WEDNESDAY, 'Ср'),
+        (THURSDAY, 'Чт'),
+        (FRIDAY, 'Пт'),
+        (SATURDAY, 'Сб'),
+        (SUNDAY, 'Вс')
+    ]
+
+    day_of_week = models.CharField(
+        max_length=20,
+        verbose_name='Рабочие дни',
+        choices=DAYS_OF_WEEK,
+        blank=True
+    )
+
+    ready = models.BooleanField(
+        default=False
+    )
+
+    employees = models.ForeignKey(
+        Employee,
+        on_delete=models.CASCADE,
+        related_name='day_of_works',
+        verbose_name='Мастер'
+    )
+
+    salons = models.ForeignKey(
+        Salon,
+        on_delete=models.CASCADE,
+        related_name='day_of_works'
+    )
+
+
+class Appointment(models.Model):
+
     MORNING_1 = '9:00 - 10:00'
     MORNING_2 = '10:00 - 11:00'
     MORNING_3 = '11:00 - 12:00'
@@ -162,15 +197,6 @@ class Appointment(models.Model):
     EVENING_1 = '18:00 - 19:00'
     EVENING_2 = '19:00 - 20:00'
     EVENING_3 = '20:00 - 21:00'
-    DAYS_OF_WEEK = [
-        (MONDAY, 'Пн'),
-        (TUESDAY, 'Вт'),
-        (WEDNESDAY, 'Ср'),
-        (THURSDAY, 'Чт'),
-        (FRIDAY, 'Пт'),
-        (SATURDAY, 'Сб'),
-        (SUNDAY, 'Вс')
-    ]
     WORK_HOURS = [
         (MORNING_1, '9:00'),
         (MORNING_2, '10:00'),
@@ -185,12 +211,6 @@ class Appointment(models.Model):
         (EVENING_2, '19:00'),
         (EVENING_3, '20:00'),
     ]
-    employees = models.ForeignKey(
-        Employee,
-        on_delete=models.CASCADE,
-        related_name='appointments',
-        verbose_name='Мастер'
-    )
     procedure = models.ForeignKey(
         Procedure,
         on_delete=models.CASCADE,
@@ -198,22 +218,26 @@ class Appointment(models.Model):
         verbose_name='Процедура',
         default=None
     )
-    salons = models.ForeignKey(
+    employee = models.ForeignKey(
+        Employee,
+        on_delete=models.CASCADE,
+        related_name='appointments',
+        verbose_name='Мастер'
+    )
+    salon = models.ForeignKey(
         Salon,
         on_delete=models.CASCADE,
         related_name='appointments'
-    )
-    day_of_week = models.CharField(
-        max_length=20,
-        verbose_name='Рабочие дни',
-        choices=DAYS_OF_WEEK,
-        blank=True
     )
     appointment_hour = models.CharField(
         max_length=15,
         verbose_name='Время записи',
         choices=WORK_HOURS,
         blank=True
+    )
+    date = models.DateField(
+        'Дата',
+        null=True
     )
 
     def __str__(self):
@@ -222,4 +246,3 @@ class Appointment(models.Model):
     class Meta:
         verbose_name = 'Приём'
         verbose_name_plural = 'Приёмы'
-        unique_together = ('day_of_week', 'appointment_hour',)
