@@ -29,7 +29,8 @@ class Procedure(models.Model):
     image = models.FileField(
         'картинка',
         null=True,
-        upload_to='media/'
+        upload_to='media/',
+        blank=True
     )
     category = models.ForeignKey(
         Category,
@@ -61,7 +62,8 @@ class Salon (models.Model):
     image = models.FileField(
         'Картинка',
         null=True,
-        upload_to='media/'
+        upload_to='media/',
+        blank=True
     )
 
     def __str__(self):
@@ -85,7 +87,8 @@ class Employee(models.Model):
     avatar = models.FileField(
         'аватар',
         null=True,
-        upload_to='media/'
+        upload_to='media/',
+        blank=True
     )
     category = models.ForeignKey(
         Category,
