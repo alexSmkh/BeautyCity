@@ -103,7 +103,7 @@ class Salon (models.Model):
     )
 
     def __str__(self):
-        return f'{self.salon_name} {self.address}'
+        return f'{self.name} {self.address}'
 
     class Meta:
         verbose_name = 'Салон'
@@ -241,7 +241,7 @@ class Appointment(models.Model):
     )
 
     def __str__(self):
-        return f'{self.day_of_week} {self.employees}'
+        return f'{self.employee}'
 
     class Meta:
         verbose_name = 'Приём'
