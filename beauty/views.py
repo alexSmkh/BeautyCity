@@ -118,10 +118,13 @@ def notes(request):
     user = request.user
     if user.is_authenticated:
         user = User.objects.get(phonenumber = str(user.phonenumber))
+        appointments = Appointment.objects.filter(user=user)
         user_attrs = {
             'first_name': user.first_name,
             'last_name': user.last_name,
-            'avatar': user.avatar
+            'avatar': user.avatar,
+            'appointments': appointments,
+            'sum': sum([appointment.procedure.price for appointment in appointments])
         }
     return render(request, 'beauty/notes.html', context=user_attrs)
 
