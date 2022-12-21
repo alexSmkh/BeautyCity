@@ -13,9 +13,14 @@ class ProcedureAdmin(admin.ModelAdmin):
     pass
 
 
+class WorkDayInline(admin.TabularInline):
+    model = DayOfWork
+    extra = 1
+
+
 @admin.register(Employee)
 class EmployeeAdmin(admin.ModelAdmin):
-    pass
+    inlines = [WorkDayInline]
 
 
 @admin.register(Salon)

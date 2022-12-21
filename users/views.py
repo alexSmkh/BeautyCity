@@ -64,6 +64,7 @@ def confirm_registration(request):
                 json_dumps_params={'ensure_ascii': False},
             )
 
+        user_phonenumber = PhoneNumber.from_string(user_phonenumber)
         user, _ = User.objects.get_or_create(phonenumber=user_phonenumber)
         login(request, user)
 

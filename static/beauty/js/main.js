@@ -125,252 +125,390 @@ $(document).ready(function() {
 		$('#mobMenu').hide()
 	})
 
-	new AirDatepicker('#datepickerHere')
+	let appointmentState = {
+		salon: null,
+		category: null,
+		service: null,
+		master: null,
+		date: null,
+		time: null,
+	}
+	const datetimeSection = $('#time')
+	const serviceSection = $('#service')
+	const confirmSection = $('#confirm')
+	const datetimeSectionTitle = $('.time__title')
+	const datepickerContainer = $('#datepicker__container')
+	const timepickerContainer = $('#timepicker__container')
+	const serviceNextBtn = $('.time__btns_next')
+	const serviceBackBtn = $('.serviceFinallys__form_back')
 
-	var acc = document.getElementsByClassName("accordion");
-	var i;
+	const getFormattedDate = (date) => {
+		const months = {
+			0: 'января',
+			1: 'февраля',
+			2: 'марта',
+			3: 'апреля',
+			4: 'мая',
+			5: 'июня',
+			6: 'июля',
+			7: 'августа',
+			8: 'сентября',
+			9: 'октября',
+			10: 'ноября',
+			11: 'декабря',
+		}
 
-	for (i = 0; i < acc.length; i++) {
-	  acc[i].addEventListener("click", function(e) {
-	  	e.preventDefault()
-	    this.classList.toggle("active");
-	    var panel = $(this).next()
-	    panel.hasClass('active') ?  
-	    	 panel.removeClass('active')
-	    	: 
-	    	 panel.addClass('active')
-	  });
+		return `${date.getDate()} ${months[date.getMonth()]}`
 	}
 
+	const finallySalonName = $('.serviceFinally__form_header__service')
+	const finallySalonAddress = $('.serviceFinally__form_header__address')
+	const finallyServiceName = $('.serviceFinally__form_content__title')
+	const finallyServicePrice = $('.serviceFinally__form_content__price')
+	const finallyMasterName = $('.accordion__block_master')
+	const finallyTime = $('.serviceFinally__form_content__time')
+	const finallyDate = $('.serviceFinally__form_content__date')
 
-	$(document).on('click', '.accordion__block', function(e) {
-		let thisName,thisAddress;
+	const updateConfirmSection = () => {
+		finallySalonName.text(appointmentState.salon.name)
+		finallySalonAddress.text(appointmentState.salon.address)
+		finallyServiceName.text(appointmentState.service.name)
+		finallyServicePrice.text(`${appointmentState.service.price} ₽`)
+		finallyMasterName.text(appointmentState.master.name)
+		finallyTime.text(appointmentState.time)
+		finallyDate.text(getFormattedDate(appointmentState.date.dateObj))
+	}
 
-		thisName = $(this).find('> .accordion__block_intro').text()
-		thisAddress = $(this).find('> .accordion__block_address').text()
-		
-		
-		if(thisName === 'BeautyCity Пушкинская') {
-			$('.service__masters > .panel').html(`
-				<div class="accordion__block fic">
-						  	<div class="accordion__block_elems fic">
-							  	<img src="img/masters/avatar/all.svg" alt="avatar" class="accordion__block_img">
-							  	<div class="accordion__block_master">Любой мастер</div>
-						  	</div>
-						  </div>
-						  <div class="accordion__block fic">
-						  	<div class="accordion__block_elems fic">
-							  	<img src="img/masters/avatar/pushkinskaya/1.svg" alt="avatar" class="accordion__block_img">
-							  	<div class="accordion__block_master">Елизавета Лапина</div>
-						  	</div>
-						  	<div class="accordion__block_prof">Мастер маникюра</div>
-						  </div>
-						  <div class="accordion__block fic">
-						  	<div class="accordion__block_elems fic">
-							  	<img src="img/masters/avatar/pushkinskaya/2.svg" alt="avatar" class="accordion__block_img">
-							  	<div class="accordion__block_master">Анна Сергеева</div>
-						  	</div>
-						  	<div class="accordion__block_prof">Парикмахер</div>
-						  </div>
-						  <div class="accordion__block fic">
-						  	<div class="accordion__block_elems fic">
-							  	<img src="img/masters/avatar/pushkinskaya/3.svg" alt="avatar" class="accordion__block_img">
-							  	<div class="accordion__block_master">Ева Колесова</div>
-						  	</div>
-						  	<div class="accordion__block_prof">Визажист</div>
-						  </div>
-						  <div class="accordion__block fic">
-						  	<div class="accordion__block_elems fic">
-							  	<img src="img/masters/avatar/pushkinskaya/4.svg" alt="avatar" class="accordion__block_img">
-							  	<div class="accordion__block_master">Мария Суворова</div>
-						  	</div>
-						  	<div class="accordion__block_prof">Стилист</div>
-						  </div>
-						  <div class="accordion__block fic">
-						  	<div class="accordion__block_elems fic">
-							  	<img src="img/masters/avatar/pushkinskaya/5.svg" alt="avatar" class="accordion__block_img">
-							  	<div class="accordion__block_master">Мария Максимова</div>
-						  	</div>
-						  	<div class="accordion__block_prof">Визажист</div>
-						  </div>
-						  <div class="accordion__block fic">
-						  	<div class="accordion__block_elems fic">
-							  	<img src="img/masters/avatar/pushkinskaya/6.svg" alt="avatar" class="accordion__block_img">
-							  	<div class="accordion__block_master">Анастасия Сергеева</div>
-						  	</div>
-						  	<div class="accordion__block_prof">Визажист</div>
-						  </div>	
-			`)
-			// $('.service__masters div[data-masters="Pushkinskaya"]').addClass('vib')
-		}
-		console.log(thisName)
-		if(thisName === 'BeautyCity Ленина') {
-			
-			$('.service__masters > .panel').html(`
-				<div class="accordion__block fic">
-						  	<div class="accordion__block_elems fic">
-							  	<img src="img/masters/avatar/all.svg" alt="avatar" class="accordion__block_img">
-							  	<div class="accordion__block_master">Любой мастер</div>
-						  	</div>
-						  </div>
-						  <div class="accordion__block fic">
-						  	<div class="accordion__block_elems fic">
-							  	<img src="img/masters/avatar/lenina/1.svg" alt="avatar" class="accordion__block_img">
-							  	<div class="accordion__block_master">Дарья Мартынова</div>
-						  	</div>
-						  	<div class="accordion__block_prof">Мастер маникюра</div>
-						  </div>
-						  <div class="accordion__block fic">
-						  	<div class="accordion__block_elems fic">
-							  	<img src="img/masters/avatar/lenina/2.svg" alt="avatar" class="accordion__block_img">
-							  	<div class="accordion__block_master">Амина Абрамова</div>
-						  	</div>
-						  	<div class="accordion__block_prof">Парикмахер</div>
-						  </div>
-						  <div class="accordion__block fic">
-						  	<div class="accordion__block_elems fic">
-							  	<img src="img/masters/avatar/lenina/3.svg" alt="avatar" class="accordion__block_img">
-							  	<div class="accordion__block_master">Милана Романова</div>
-						  	</div>
-						  	<div class="accordion__block_prof">Визажист</div>
-						  </div>
-						  <div class="accordion__block fic">
-						  	<div class="accordion__block_elems fic">
-							  	<img src="img/masters/avatar/lenina/4.svg" alt="avatar" class="accordion__block_img">
-							  	<div class="accordion__block_master">Диана Чернова</div>
-						  	</div>
-						  	<div class="accordion__block_prof">Стилист</div>
-						  </div>
-						  <div class="accordion__block fic">
-						  	<div class="accordion__block_elems fic">
-							  	<img src="img/masters/avatar/lenina/5.svg" alt="avatar" class="accordion__block_img">
-							  	<div class="accordion__block_master">Полина Лукьянова</div>
-						  	</div>
-						  	<div class="accordion__block_prof">Визажист</div>
-						  </div>
-						  <div class="accordion__block fic">
-						  	<div class="accordion__block_elems fic">
-							  	<img src="img/masters/avatar/lenina/6.svg" alt="avatar" class="accordion__block_img">
-							  	<div class="accordion__block_master">Вера Дмитриева</div>
-						  	</div>
-						  	<div class="accordion__block_prof">Визажист</div>
-						  </div>
-			`)
-		}
+	const loadData = (url, data={}) => {
+		return $.ajax({
+			type: 'GET',
+			url,
+			data,
+			headers: { 'X-CSRFToken': getCookie('csrftoken') },
+			dataType: 'json',
+			async: false
+		}).responseJSON
+	}
 
-		if(thisName === 'BeautyCity Красная') {
-			$('.service__masters > .panel').html(`
-				<div class="accordion__block fic">
-						  	<div class="accordion__block_elems fic">
-							  	<img src="img/masters/avatar/all.svg" alt="avatar" class="accordion__block_img">
-							  	<div class="accordion__block_master">Любой мастер</div>
-						  	</div>
-						  </div>
-						  <div class="accordion__block fic">
-						  	<div class="accordion__block_elems fic">
-							  	<img src="img/masters/avatar/krasnaya/1.svg" alt="avatar" class="accordion__block_img">
-							  	<div class="accordion__block_master">Зоя Матвеева</div>
-						  	</div>
-						  </div>
-						  <div class="accordion__block fic">
-						  	<div class="accordion__block_elems fic">
-							  	<img src="img/masters/avatar/krasnaya/2.svg" alt="avatar" class="accordion__block_img">
-							  	<div class="accordion__block_master">Мария Родина</div>
-						  	</div>
-						  	<div class="accordion__block_prof">Мастер маникюра</div>
-						  </div>
-						  <div class="accordion__block fic">
-						  	<div class="accordion__block_elems fic">
-							  	<img src="img/masters/avatar/krasnaya/3.svg" alt="avatar" class="accordion__block_img">
-							  	<div class="accordion__block_master">Дарья Попова</div>
-						  	</div>
-						  	<div class="accordion__block_prof">Парикмахер</div>
-						  </div>
-						  <div class="accordion__block fic">
-						  	<div class="accordion__block_elems fic">
-							  	<img src="img/masters/avatar/krasnaya/4.svg" alt="avatar" class="accordion__block_img">
-							  	<div class="accordion__block_master">Ева Семенова</div>
-						  	</div>
-						  	<div class="accordion__block_prof">Визажист</div>
-						  </div>
-						  <div class="accordion__block fic">
-						  	<div class="accordion__block_elems fic">
-							  	<img src="img/masters/avatar/krasnaya/5.svg" alt="avatar" class="accordion__block_img">
-							  	<div class="accordion__block_master">Вера Романова</div>
-						  	</div>
-						  	<div class="accordion__block_prof">Стилист</div>
-						  </div>
-						  <div class="accordion__block fic">
-						  	<div class="accordion__block_elems fic">
-							  	<img src="img/masters/avatar/krasnaya/6.svg" alt="avatar" class="accordion__block_img">
-							  	<div class="accordion__block_master">Валерия Зуева</div>
-						  	</div>
-						  	<div class="accordion__block_prof">Визажист</div>
-						  </div>
-			`)
-			
-		}
+	$('#serviceFinally__form').submit(function(e) {
 
-		$(this).parent().parent().find('> button.active').addClass('selected').text(thisName + '  ' +thisAddress)
-		setTimeout(() => {
-			$(this).parent().parent().find('> button.active').click()
-		}, 200)
-		
-		// $(this).parent().addClass('hide')
-
-		// console.log($(this).parent().parent().find('.panel').hasClass('selected'))
-		
-		// $(this).parent().parent().find('.panel').addClass('selected')
+		const form = $(this)
+		form.find('[name=procedure]').val(appointmentState.service.id)
+		form.find('[name=employee]').val(appointmentState.master.id)
+		form.find('[name=salon]').val(appointmentState.salon.id)
+		form.find('[name=appointment_hour]').val(appointmentState.time)
+		form.find('[name=date]').val(appointmentState.date.formattedDate)
+		form.trigger('submit')
 	})
 
+	$(document).on('click', '#submit_appointment_btn', function(e) {
+		e.preventDefault()
+		if (!serviceNextBtn.hasClass('active')) { return }
 
-	$('.accordion__block_item').click(function(e) {
-		let thisName,thisAddress;
-		thisName = $(this).find('> .accordion__block_item_intro').text()
-		thisAddress = $(this).find('> .accordion__block_item_address').text()
-		$(this).parent().parent().parent().parent().find('> button.active').addClass('selected').text(thisName + '  ' +thisAddress)
-		// $(this).parent().parent().parent().parent().find('> button.active').click()
-		// $(this).parent().parent().parent().addClass('hide')
-		setTimeout(() => {
-			$(this).parent().parent().parent().parent().find('> button.active').click()
-		}, 200)
+		serviceSection.hide()
+		datetimeSection.hide()
+		updateConfirmSection()
+		confirmSection.show()
 	})
 
-
-
-	// 	console.log($('.service__masters > .panel').attr('data-masters'))
-	// if($('.service__salons .accordion.selected').text() === "BeautyCity Пушкинская  ул. Пушкинская, д. 78А") {
-	// }
-
-
-	$(document).on('click', '.service__masters .accordion__block', function(e) {
-		let clone = $(this).clone()
-		console.log(clone)
-		$(this).parent().parent().find('> button.active').html(clone)
+	$(document).on('click', '.time__elems_btn', function(e) {
+		const timeBtn = $(this)
+		$('.time__elems_btn').removeClass('active')
+		timeBtn.addClass('active')
+		appointmentState.time = timeBtn.data('time')
+		serviceNextBtn.addClass('active')
 	})
 
-	// $('.accordion__block_item').click(function(e) {
-	// 	const thisName = $(this).find('.accordion__block_item_intro').text()
-	// 	const thisAddress = $(this).find('.accordion__block_item_address').text()
-	// 	console.log($(this).parent().parent().parent().parent())
-	// 	$(this).parent().parent().parent().parent().find('button.active').addClass('selected').text(thisName + '  ' +thisAddress)
-	// })
+	$(document).on('click', '.serviceFinallys__form_back', function(e) {
+		e.preventDefault()
+		confirmSection.hide()
+		serviceSection.show()
+		datetimeSection.show()
+	})
+
+	const getDatepickerMinDate = () => {
+		const now = new Date();
+		return  (now.getHours() < 20) ? now : now.setDate(now.getDate() + 1)
+	}
+
+	const buildTimeBlock = (title, times) => {
+		const timeBtns = times.map((time) => `<button data-time="${time}" class="time__elems_btn">${time}</button>`).join('')
+		return $(`
+			<div class="time__items">
+				<div class="time__elems_intro">${title}</div>
+				<div class="time__elems_elem fic">
+					${timeBtns}
+				</div>
+			</div>
+		`)
+	}
+
+	const renderTime = (timeSections) => {
+		const blockTitles = {
+			morning: 'Утро',
+			afternoon: 'День',
+			evening: 'Вечер'
+		}
+
+		const timeBlocks = Object.entries(timeSections).map(([timeSection, times]) => {
+			if (times.length === 0) {
+				return ''
+			}
+			return buildTimeBlock(blockTitles[timeSection], times)
+		})
 
 
+		timepickerContainer.empty()
+		if (timeBlocks.every((block) => block === '')) {
+			timepickerContainer.append($('<div class="time_elemes">Нет мест для записи.</div>'))
 
-	// $('.accordion__block_item').click(function(e) {
-	// 	const thisChildName = $(this).text()
-	// 	console.log(thisChildName)
-	// 	console.log($(this).parent().parent().parent())
-	// 	$(this).parent().parent().parent().parent().parent().find('button.active').addClass('selected').text(thisChildName)
+		} else {
+			const timeItemsContainer = $(`<div class="time__elems"></div>`).append(timeBlocks)
+			timepickerContainer.append(timeItemsContainer)
+		}
 
-	// })
-	// $('.accordion.selected').click(function() {
-	// 	$(this).parent().find('.panel').hasClass('selected') ? 
-	// 	 $(this).parent().find('.panel').removeClass('selected')
-	// 		:
-	// 	$(this).parent().find('.panel').addClass('selected')
-	// })
+
+	}
+
+	const weekdays = ['Mo', 'Tu', 'We', 'Td', 'Fr', 'Sa', 'Su']
+
+	const sortTimes = (times) => (
+		times
+			.map((time) => parseInt(time.split(':')[0]))
+			.reduce((acc, hour) => {
+				const formatTime = (hour) => `${hour}:00`
+
+				if (hour < 12) {
+					return {...acc, morning: [...acc.morning, formatTime(hour)]}
+				} else if (hour < 18) {
+					return {...acc, afternoon: [...acc.afternoon, formatTime(hour)]}
+				} else {
+					return {...acc, evening: [...acc.evening, formatTime(hour)]}
+				}
+			}, {morning: [], afternoon: [], evening: []})
+
+	)
+
+
+	const datepicker = new AirDatepicker(
+		'#datepickerHere',
+		{
+			language: 'ru',
+			dateFormat: 'yyyy/mm/dd',
+			multipleDates: false,
+			minDate: getDatepickerMinDate(),
+
+			onSelect: function onSelect({ date }) {
+				const weekday = weekdays[date.getUTCDay()]
+				const day = date.getDate()
+				const month = date.getMonth() + 1
+				const year = date.getFullYear()
+				const formattedDate = `${year}-${month}-${day}`
+
+				const times = loadData(
+					'/api/get_available_time',
+					{
+						salon_id: appointmentState.salon.id,
+						master_id: appointmentState.master.id,
+						weekday,
+						day,
+						month,
+						date: formattedDate,
+					}
+				)
+
+				appointmentState = { ...appointmentState, date: { dateObj: date, formattedDate }, time: null}
+				serviceNextBtn.removeClass('active')
+				renderTime(sortTimes(times))
+				timepickerContainer.show()
+			},
+		},
+	)
+
+	$(document).on('click', '.accordion', function(e) {
+		e.preventDefault()
+		const accordion = e.target
+		accordion.classList.toggle("active");
+		const panel = $(accordion).next()
+		panel.toggleClass('active')
+		panel.hasClass('active') ? panel.show() : panel.hide()
+		serviceNextBtn.removeClass('active')
+	})
+
+	$(document).on('click', '.accordion__master_block', function(e) {
+		e.preventDefault()
+
+		const masterDiv = $(this)
+		const masterIntro = masterDiv.find('.accordion__block_intro')
+		const masterName = masterIntro.text()
+		const masterId = masterIntro.data('master_id')
+
+		appointmentState = {
+			...appointmentState,
+			master: {
+				id: masterId,
+				name: masterName,
+			}
+		}
+
+
+		const accordion_btn = masterDiv.parent().parent().find('> button.accordion')
+		accordion_btn.addClass('selected').text(masterName)
+		accordion_btn.trigger('click')
+		if (appointmentState.date !== null) {
+			$('.air-datepicker-cell.-day-.-selected-').removeClass('-selected-')
+		}
+		datetimeSection.show()
+		timepickerContainer.hide()
+	})
+
+	const buildMaster = (master) => {
+		return $(`<div class="accordion__block accordion__master_block fic">
+					<div class="accordion__block_intro" data-master_id="${master.id}">${master.name} ${master.surname}</div>
+				</div>`)
+	}
+
+	const renderMasters = (data) => {
+		const accordionBtn = $('<button class="accordion">(Выберите мастера)</button>')
+		const masters = data.map(buildMaster)
+		const masters_wrapper = $('<div class="panel"></div>').append(masters)
+
+
+		const masters_block = $(`<div class="service__form_block service__masters"></div>`).append(
+			accordionBtn,
+			masters_wrapper
+		)
+
+		$('.dropdowns_container').append(masters_block)
+	}
+
+	$(document).on('click', '.accordion__service_block', function(e) {
+		e.preventDefault()
+		const serviceDiv = $(this)
+		const serviceDropdown = serviceDiv.parent().parent().parent().parent()
+		const serviceName = serviceDiv.find('.accordion__block_item_intro').text()
+
+		const serviceId = serviceDiv.data('service_id')
+		const servicePrice = serviceDiv.data('service_price')
+		const categoryName = serviceDiv.data('category_name')
+		const categoryId = serviceDiv.data('category_id')
+
+		appointmentState = {
+			...appointmentState,
+			category: {
+				name: categoryName,
+				id: categoryId,
+			},
+			service: {
+				name: serviceName,
+				id: serviceId,
+				price: servicePrice,
+			},
+			master: null,
+			date: null,
+			time: null,
+		}
+
+
+		serviceDropdown.nextAll('.service__form_block').remove()
+		renderMasters(
+			loadData(
+				'/api/masters',
+				{
+					salon_id: appointmentState.salon.id,
+					category_id: appointmentState.category.id,
+				}
+			)
+		)
+
+		const accordion_btn = serviceDropdown.find('> button.active')
+		accordion_btn.addClass('selected').text(serviceName)
+		accordion_btn.trigger('click')
+		datetimeSectionTitle.text('Выберите дату')
+		datepickerContainer.show()
+	})
+
+	const buildService = (service, categoryName, categoryId) => {
+		return $(`<div 
+					class="accordion__block_item accordion__service_block fic"
+					data-service_id="${service.id}"
+					data-service_price="${service.price}"
+					data-category_name="${categoryName}"
+					data-category_id="${categoryId}"
+					>
+					<div class="accordion__block_item_intro">${service.name}</div>
+					<div class="accordion__block_item_address">${service.price} ₽</div>
+				</div>`)
+	}
+
+	const buildCategory = (category) => {
+		const services = category.services.map((service) => buildService(service, category.name, category.id))
+		const category_div = $(`
+			<button class="accordion" data-category_id="${category.id}">${category.name}</button>
+			<div class="panel">
+				<div class="accordion__block_items">
+				</div>
+			</div>	
+		`)
+
+		category_div.find('.accordion__block_items').append(services)
+		return category_div
+	}
+
+	const renderServices = (data) => {
+		const accordionBtn = $('<button class="accordion">(Выберите услугу)</button>')
+		const categories = data.map(buildCategory)
+		const categories_html = $('<div class="panel"></div>').append(categories)
+
+
+		const categories_block = $(`<div class="service__form_block service__services"></div>`).append(
+			accordionBtn,
+			categories_html
+		)
+
+		categories_block.find('.service__services').append(categories_html)
+		$('.dropdowns_container').append(categories_block)
+	}
+
+	$('.accordion__salon_block').on('click', function(e) {
+		e.preventDefault()
+
+		const salonDiv = $(this)
+		const salonDropdown = salonDiv.parent().parent()
+		const salonName = salonDiv.find('.accordion__block_intro').text()
+		const salonAddress = salonDiv.find('.accordion__block_address').text()
+
+		appointmentState = {
+			...appointmentState,
+			salon: {
+				id: salonDiv.data('salon_id'),
+				name: salonName,
+				address: salonAddress,
+			},
+			service: null,
+			master: null,
+			time: null,
+			date: null,
+		}
+
+		salonDropdown.nextAll('.service__form_block').remove()
+		renderServices(loadData('/api/categories'))
+
+		const accordion_btn = salonDropdown.find('> button.accordion.active')
+		accordion_btn.addClass('selected').text(salonName)
+		accordion_btn.click()
+		datetimeSection.hide()
+	})
+
+	$('.accordion__service_block').on('click', function(e) {
+		e.preventDefault()
+
+		const serviceDiv = $(this)
+		const serviceName = serviceDiv.find('.accordion__block_intro').text()
+
+		serviceDiv.parent().parent().parent().parent().find('> button.active').addClass('selected').text(serviceName)
+		serviceDiv.parent().parent().parent().parent().find('> .panel').hide()
+	})
 
 
 	//popup
@@ -430,6 +568,7 @@ $(document).ready(function() {
 		})
 
 	}
+
 
 	function clearConfirmationForm() {
 		$('.tipsPopup__form_inputNum').each(function(_, inputEl) {
@@ -547,7 +686,6 @@ $(document).ready(function() {
 		e.preventDefault()
 		$('.time__elems_btn').removeClass('active')
 		$(this).addClass('active')
-		// $(this).hasClass('active') ? $(this).removeClass('active') : $(this).addClass('active')
 	})
 
 	$(document).on('click', '.servicePage', function() {
@@ -555,7 +693,4 @@ $(document).ready(function() {
 			$('.time__btns_next').addClass('active')
 		}
 	})
-	
-
-
 })

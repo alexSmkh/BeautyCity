@@ -1,3 +1,4 @@
+from phonenumber_field.modelfields import PhoneNumberField
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 from users.models import User
@@ -35,7 +36,7 @@ class Procedure(models.Model):
     category = models.ForeignKey(
         Category,
         on_delete=models.CASCADE,
-        related_name='procedure',
+        related_name='services',
         default=None,
         verbose_name='Категории'
     )
@@ -185,31 +186,35 @@ class DayOfWork(models.Model):
 
 class Appointment(models.Model):
 
-    MORNING_1 = '9:00 - 10:00'
-    MORNING_2 = '10:00 - 11:00'
-    MORNING_3 = '11:00 - 12:00'
-    AFTERNOON_1 = '12:00 - 13:00'
-    AFTERNOON_2 = '13:00 - 14:00'
-    AFTERNOON_3 = '14:00 - 15:00'
-    DAY_1 = '15:00 - 16:00'
-    DAY_2 = '16:00 - 17:00'
-    DAY_3 = '17:00 - 18:00'
-    EVENING_1 = '18:00 - 19:00'
-    EVENING_2 = '19:00 - 20:00'
-    EVENING_3 = '20:00 - 21:00'
+    MORNING_1 = '9:00'
+    MORNING_2 = '10:00'
+    MORNING_3 = '11:00'
+    AFTERNOON_1 = '12:00'
+    AFTERNOON_2 = '13:00'
+    AFTERNOON_3 = '14:00'
+    DAY_1 = '15:00'
+    DAY_2 = '16:00'
+    DAY_3 = '17:00'
+    EVENING_1 = '18:00'
+    EVENING_2 = '19:00'
+    EVENING_3 = '20:00'
+    day_times = {
+        MORNING_1, MORNING_2, MORNING_2, MORNING_3, AFTERNOON_1, AFTERNOON_2,
+        AFTERNOON_3, DAY_1, DAY_2, DAY_3, EVENING_1, EVENING_2, EVENING_3
+    }
     WORK_HOURS = [
-        (MORNING_1, '9:00'),
-        (MORNING_2, '10:00'),
-        (MORNING_3, '11:00'),
-        (AFTERNOON_1, '12:00'),
-        (AFTERNOON_2, '13:00'),
-        (AFTERNOON_3, '14:00'),
-        (DAY_1, '15:00'),
-        (DAY_2, '16:00'),
-        (DAY_3, '17:00'),
-        (EVENING_1, '18:00'),
-        (EVENING_2, '19:00'),
-        (EVENING_3, '20:00'),
+        (MORNING_1, MORNING_1),
+        (MORNING_2, MORNING_2),
+        (MORNING_3, MORNING_3),
+        (AFTERNOON_1, AFTERNOON_1),
+        (AFTERNOON_2, AFTERNOON_2),
+        (AFTERNOON_3, AFTERNOON_3),
+        (DAY_1, DAY_1),
+        (DAY_2, DAY_2),
+        (DAY_3, DAY_3),
+        (EVENING_1, EVENING_1),
+        (EVENING_2, EVENING_2),
+        (EVENING_3, EVENING_3),
     ]
     procedure = models.ForeignKey(
         Procedure,
@@ -235,6 +240,19 @@ class Appointment(models.Model):
         choices=WORK_HOURS,
         blank=True
     )
+    user = models.ForeignKey(
+        User,
+        related_name='appointments',
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE
+    )
+    question = models.TextField(
+        'вопрос',
+        null=True,
+        blank=True
+    )
+    client_name = models.CharField('имя клиента', max_length=100, null=True, blank=True)
     date = models.DateField(
         'Дата',
         null=True
