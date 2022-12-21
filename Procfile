@@ -1,1 +1,1 @@
-web: gunicorn 'beautyCity.wsgi'
+web: gunicorn 'BeautyCity.wsgi'
