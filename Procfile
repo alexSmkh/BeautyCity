@@ -1,1 +1,1 @@
-web: gunicorn 'BeautyCity.wsgi'
+web: python manage.py migrate && gunicorn 'BeautyCity.wsgi'
