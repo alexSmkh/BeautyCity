@@ -2,6 +2,7 @@ from pathlib import Path
 from environs import Env
 import dj_database_url
 import os
+from django.contrib.messages import constants as messages
 
 
 env = Env()
@@ -124,3 +125,12 @@ MEDIA_URL = '/media/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'users.User'
+
+
+MESSAGE_TAGS = {
+    messages.DEBUG: 'debug',
+    messages.INFO: 'info',
+    messages.SUCCESS: 'success',
+    messages.WARNING: 'warning',
+    messages.ERROR: 'danger',
+}

@@ -1,6 +1,7 @@
 import datetime
 
 from django.shortcuts import render, redirect
+from django.contrib import messages
 
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -134,9 +135,11 @@ def create_appointment(request):
         form = AppointmentForm(request.POST)
 
         if not form.is_valid():
+            messages.error(request, 'Вы ввели некорректные данные. Пожалуйста, попробуйте еще раз.')
             return redirect('beauty:service')
 
         form.save()
+        messages.success(request, 'Вы успешно записались на прием.')
         return redirect('beauty:index')
 
     return redirect('beauty:index')

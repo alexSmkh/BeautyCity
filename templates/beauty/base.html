@@ -106,6 +106,16 @@
 			</div>
 		</div>
 	</header>
+
+{% if messages %}
+    {% for message in messages %}
+        {% if message.tags == 'success'  %}
+            {% include 'beauty/alerts/success.html' with message=message%}
+        {% elif message.tags == 'danger' %}
+            {% include 'beauty/alerts/error.html' with message=message %}
+        {% endif %}
+    {% endfor %}
+{%  endif%}
             
 {% block content%} 
 {% endblock %}
