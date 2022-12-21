@@ -21,12 +21,7 @@ SECRET_KEY = env('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool('DEBUG', True)
 
-ALLOWED_HOSTS = env.list(
-    "ALLOWED_HOSTS",
-    subcast=str,
-    default=['127.0.0.1', 'https://callmeishimura.pythonanywhere.com/',
-             'callmeishimura.pythonanywhere.com']
-)
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
 
 # Application definition
 
