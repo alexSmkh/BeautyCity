@@ -1,1 +1,1 @@
-web: python manage.py collectstatic && gunicorn 'BeautyCity.wsgi'
+web: gunicorn 'BeautyCity.wsgi'
