@@ -46,7 +46,7 @@
 						<div class="salons__block">
 							<img src="{{salon.image.url}}" alt="salon" class="salons__block_img">
 							<div class="salons__elems">
-								<div class="block__title salons__elems_title">{{salon.salon_name}}</div>
+								<div class="block__title salons__elems_title">{{salon.name}}</div>
 								<div class="salons__elems_light">{{salon.address}}</div>
 							</div>
 						</div>
@@ -114,7 +114,7 @@
 				<div class="row mastersSlider">
 					{% for employee in employees%}
 					<div class="col-md-3">
-						<div class="cardBlock masters__block" style='height:200px; width: 250px'>
+						<div class="cardBlock masters__block" style='height:200px; width: 280px'>
 							<div class="masters__header fic">
 								<img src="{{employee.avatar.url}}" alt="master" class="masters__header_img">
 								<div class="masters__header_elmes">
