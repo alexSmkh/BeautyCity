@@ -1,6 +1,14 @@
 from rest_framework.serializers import Serializer, ModelSerializer, SlugRelatedField
-from rest_framework.serializers import IntegerField
+from rest_framework.serializers import IntegerField, CharField, DateField
 from beauty.models import Category, Employee, Procedure, Salon
+
+
+class RequestAvailableTimeSerializer(Serializer):
+
+    salon_id = IntegerField()
+    master_id = IntegerField()
+    weekday = CharField(max_length=2)
+    date = DateField(input_formats=['%Y-%m-%d'])
 
 
 class RequestMastersForAppointmentDetailSerializer(Serializer):

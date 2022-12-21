@@ -1,18 +1,16 @@
-from http import HTTPStatus
+import datetime
+
 from django.shortcuts import render, redirect
-from django.http import JsonResponse
-from django.core.serializers import serialize
 
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from .models import Category, Salon, Procedure, Employee, Feedback
+from .models import Appointment, DayOfWork
 from .models import Salon, Procedure, Employee, Feedback, Category
 from users.models import User
 from users.forms import UserToCallForm
-from .serializers import EmployeeAppointmentDetailSerializer, RequestMastersForAppointmentDetailSerializer, \
-    SalonAppointmentDetailSerializer, \
-    ServiceCategoryAppointmentDetailSerializer
+from .serializers import EmployeeAppointmentDetailSerializer, RequestAvailableTimeSerializer, \
+    RequestMastersForAppointmentDetailSerializer, ServiceCategoryAppointmentDetailSerializer
 from .forms import AppointmentForm
 
 
@@ -37,7 +35,6 @@ def index(request):
     else:
         form = UserToCallForm()
     context['form'] = form
-    
 
     return render(request, 'beauty/index.html', context)
 
@@ -55,7 +52,7 @@ def service(request):
     for category in categories:
         service_item = {
             category.name: {
-                procedure.name: procedure.price for procedure in category.procedure.all()}
+                procedure.name: procedure.price for procedure in category.services.all()}
         }
         service_items.append(service_item)
 
@@ -73,22 +70,52 @@ def get_categories(request):
 @api_view(['GET'])
 def get_masters(request):
     request_serializer = RequestMastersForAppointmentDetailSerializer(request.query_params)
-    masters = Employee.objects.filter(
-        salon_id=request_serializer.data['salon_id'],
-        category_id=request_serializer.data['category_id'],
-    )
 
+    master_ids = DayOfWork.objects.filter(
+        salons__id=request_serializer.data['salon_id'],
+        employees__category_id=request_serializer.data['category_id'],
+    ).distinct().values_list('employees', flat=True)
+
+    masters = Employee.objects.filter(id__in=master_ids)
     serializer = EmployeeAppointmentDetailSerializer(masters, many=True)
 
     return Response(data=serializer.data)
 
 
+@api_view(['GET'])
+def get_available_time(request):
+    request_serializer = RequestAvailableTimeSerializer(request.query_params)
+
+    try:
+        employee_word_day = DayOfWork.objects.get(
+            salons_id=request_serializer.data['salon_id'],
+            employees_id=request_serializer.data['master_id'],
+            day_of_week=request_serializer.data['weekday']
+        )
+    except DayOfWork.DoesNotExist:
+        return Response([])
+
+    if not employee_word_day.ready:
+        return Response([])
+
+    appointments = Appointment.objects.filter(
+        employee_id=request_serializer.data['master_id'],
+        salon_id=request_serializer.data['salon_id'],
+        date=request_serializer.data['date']
+    ).values_list('appointment_hour', flat=True)
+
+    time_begins = set(map(lambda time: time.split(' - ')[0], appointments))
+    free_times = list(Appointment.day_times.difference(time_begins))
+    free_sorted_times = sorted(free_times, key=lambda time: datetime.datetime.strptime(time, '%H:%M'))
+    return Response(free_sorted_times)
+
+
 def service_finally(request):
-    return render(request, 'beauty/serviceFinally.html')
+    pass
 
 
 def notes(request):
-    user=request.user
+    user = request.user
     if user.is_authenticated:
         user = User.objects.get(phonenumber = str(user.phonenumber))
         user_attrs = {
@@ -96,7 +123,7 @@ def notes(request):
             'last_name': user.last_name,
             'avatar': user.avatar
         }
-    return render(request, 'beauty/notes.html', context = user_attrs)
+    return render(request, 'beauty/notes.html', context=user_attrs)
 
 
 def create_appointment(request):
@@ -104,9 +131,9 @@ def create_appointment(request):
         form = AppointmentForm(request.POST)
 
         if not form.is_valid():
-            return redirect('service')
+            return redirect('beauty:service')
 
         form.save()
-        return redirect('index')
+        return redirect('beauty:index')
 
-    return redirect('index')
+    return redirect('beauty:index')

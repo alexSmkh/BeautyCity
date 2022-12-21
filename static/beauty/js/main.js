@@ -179,6 +179,28 @@ $(document).ready(function() {
 		finallyDate.text(getFormattedDate(appointmentState.date.dateObj))
 	}
 
+	const loadData = (url, data={}) => {
+		return $.ajax({
+			type: 'GET',
+			url,
+			data,
+			headers: { 'X-CSRFToken': getCookie('csrftoken') },
+			dataType: 'json',
+			async: false
+		}).responseJSON
+	}
+
+	$('#serviceFinally__form').submit(function(e) {
+
+		const form = $(this)
+		form.find('[name=procedure]').val(appointmentState.service.id)
+		form.find('[name=employee]').val(appointmentState.master.id)
+		form.find('[name=salon]').val(appointmentState.salon.id)
+		form.find('[name=appointment_hour]').val(appointmentState.time)
+		form.find('[name=date]').val(appointmentState.date.formattedDate)
+		form.trigger('submit')
+	})
+
 	$(document).on('click', '#submit_appointment_btn', function(e) {
 		e.preventDefault()
 		if (!serviceNextBtn.hasClass('active')) { return }
@@ -198,6 +220,7 @@ $(document).ready(function() {
 	})
 
 	$(document).on('click', '.serviceFinallys__form_back', function(e) {
+		e.preventDefault()
 		confirmSection.hide()
 		serviceSection.show()
 		datetimeSection.show()
@@ -247,70 +270,60 @@ $(document).ready(function() {
 
 	}
 
+	const weekdays = ['Mo', 'Tu', 'We', 'Td', 'Fr', 'Sa', 'Su']
+
+	const sortTimes = (times) => (
+		times
+			.map((time) => parseInt(time.split(':')[0]))
+			.reduce((acc, hour) => {
+				const formatTime = (hour) => `${hour}:00`
+
+				if (hour < 12) {
+					return {...acc, morning: [...acc.morning, formatTime(hour)]}
+				} else if (hour < 18) {
+					return {...acc, afternoon: [...acc.afternoon, formatTime(hour)]}
+				} else {
+					return {...acc, evening: [...acc.evening, formatTime(hour)]}
+				}
+			}, {morning: [], afternoon: [], evening: []})
+
+	)
+
+
 	const datepicker = new AirDatepicker(
 		'#datepickerHere',
 		{
 			language: 'ru',
-			dateFormat: 'yyyy-mm-dd',
+			dateFormat: 'yyyy/mm/dd',
 			multipleDates: false,
 			minDate: getDatepickerMinDate(),
 
-			onSelect: function onSelect({ date, formattedDate }) {
-				const selectedCellDay = $('.datepicker--cell-day.-focus-')
-				// post_request(
-				// 	'/api/get_available_time',
-				// 	{
-				// 		employee_id: appointmentState.master.id,
-				// 		date: formattedDate,
-				// 	},
-				// 	(data) => {
-				// 		renderTime(data)
-				// 	}
-				//
-				// )
-				let times
-				if (date.getDate() === 20) {
-					times = {
-						morning: ['10:00', '12:00', '08:00'],
-						afternoon: ['14:00', '16:00'],
-						evening: ['18:00', '19:00', '20:00'],
+			onSelect: function onSelect({ date }) {
+				const weekday = weekdays[date.getUTCDay()]
+				const day = date.getDate()
+				const month = date.getMonth() + 1
+				const year = date.getFullYear()
+				const formattedDate = `${year}-${month}-${day}`
+
+				const times = loadData(
+					'/api/get_available_time',
+					{
+						salon_id: appointmentState.salon.id,
+						master_id: appointmentState.master.id,
+						weekday,
+						day,
+						month,
+						date: formattedDate,
 					}
-				} else if (date.getDate() === 21) {
-					times = {
-						morning: [],
-						afternoon: [],
-						evening: ['18:00']
-					}
-				} else if (date.getDate() === 22) {
-					times = {
-						morning: [],
-						afternoon: [],
-						evening: []
-					}
-				}
+				)
 
 				appointmentState = { ...appointmentState, date: { dateObj: date, formattedDate }, time: null}
 				serviceNextBtn.removeClass('active')
-				renderTime(times)
+				renderTime(sortTimes(times))
 				timepickerContainer.show()
 			},
 		},
 	)
-
-	const loadData = (url, data={}) => {
-		return $.ajax({
-			type: 'GET',
-			url,
-			data,
-			headers: { 'X-CSRFToken': getCookie('csrftoken') },
-			dataType: 'json',
-			async: false,
-			success: ({responseJSON}) => {
-				response = responseJSON
-			}
-		}).responseJSON
-	}
-
 
 	$(document).on('click', '.accordion', function(e) {
 		e.preventDefault()
@@ -330,10 +343,6 @@ $(document).ready(function() {
 		const masterName = masterIntro.text()
 		const masterId = masterIntro.data('master_id')
 
-		console.log(masterDiv.html())
-		console.log('name', masterName)
-		console.log('id', masterId)
-
 		appointmentState = {
 			...appointmentState,
 			master: {
@@ -346,11 +355,16 @@ $(document).ready(function() {
 		const accordion_btn = masterDiv.parent().parent().find('> button.accordion')
 		accordion_btn.addClass('selected').text(masterName)
 		accordion_btn.trigger('click')
+		if (appointmentState.date !== null) {
+			$('.air-datepicker-cell.-day-.-selected-').removeClass('-selected-')
+		}
+		datetimeSection.show()
+		timepickerContainer.hide()
 	})
 
 	const buildMaster = (master) => {
 		return $(`<div class="accordion__block accordion__master_block fic">
-					<div class="accordion__block_intro" data-master_id="${master.id}">${master.name}</div>
+					<div class="accordion__block_intro" data-master_id="${master.id}">${master.name} ${master.surname}</div>
 				</div>`)
 	}
 
@@ -397,37 +411,19 @@ $(document).ready(function() {
 
 
 		serviceDropdown.nextAll('.service__form_block').remove()
-		// renderMasters(
-		// 	loadData(
-		// 		'/api/masters',
-		// 		{
-		// 			salon_id: appointmentState.salon.id,
-		// 			category_id: appointmentState.category.id,
-		// 		}
-		// 	)
-		// )
-
-		const masters = [
-			{
-				id: 1,
-				name: 'Enthony Pettis',
-			},
-			{
-				id: 2,
-				name: 'Karl Marks',
-			},
-			{
-				id: 3,
-				name: 'John Jones',
-			}
-
-		]
-		renderMasters(masters)
+		renderMasters(
+			loadData(
+				'/api/masters',
+				{
+					salon_id: appointmentState.salon.id,
+					category_id: appointmentState.category.id,
+				}
+			)
+		)
 
 		const accordion_btn = serviceDropdown.find('> button.active')
 		accordion_btn.addClass('selected').text(serviceName)
 		accordion_btn.trigger('click')
-		datetimeSection.show()
 		datetimeSectionTitle.text('Выберите дату')
 		datepickerContainer.show()
 	})
@@ -572,6 +568,7 @@ $(document).ready(function() {
 		})
 
 	}
+
 
 	function clearConfirmationForm() {
 		$('.tipsPopup__form_inputNum').each(function(_, inputEl) {

@@ -49,10 +49,7 @@ margin-bottom: 20px;
 
 color: #323232;
 }
-/*#time, #datepicker__container, #timepicker__container {*/
-/*	display: none;*/
-/*}*/
-#confirm {
+#time, #datepicker__container, #timepicker__container, #confirm  {
 	display: none;
 }
 
