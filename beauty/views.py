@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from .models import Salon, Procedure, Employee, Feedback, Category
 from users.models import User
 from users.forms import UserToCallForm
+from .forms import AppointmentForm
 
 
 def index(request):
@@ -65,3 +66,16 @@ def notes(request):
             'avatar': user.avatar
         }
     return render(request, 'beauty/notes.html', context = user_attrs)
+
+
+def create_appointment(request):
+    if request.method == 'POST':
+        form = AppointmentForm(request.POST)
+
+        if not form.is_valid():
+            return redirect('service')
+
+        form.save()
+        return redirect('index')
+
+    return redirect('index')
