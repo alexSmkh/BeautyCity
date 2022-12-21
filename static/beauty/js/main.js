@@ -201,6 +201,10 @@ $(document).ready(function() {
 		form.trigger('submit')
 	})
 
+	$(document).on('click', '.close', function(e) {
+		$(this).parent().fadeOut();
+	})
+
 	$(document).on('click', '#submit_appointment_btn', function(e) {
 		e.preventDefault()
 		if (!serviceNextBtn.hasClass('active')) { return }
